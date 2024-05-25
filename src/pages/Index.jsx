@@ -1,34 +1,22 @@
 import React, { useState } from "react";
-import { Container, VStack, HStack, Box, Text, Button, Input, IconButton, Image, useToast } from "@chakra-ui/react";
+import { Container, VStack, HStack, Box, Text, Button, IconButton, useToast } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 import { FaPlus, FaTrash, FaShoppingCart } from "react-icons/fa";
 
 const Index = () => {
   const [items, setItems] = useState([]);
-  const [itemName, setItemName] = useState("");
-  const [itemPrice, setItemPrice] = useState("");
+  const navigate = useNavigate();
   const toast = useToast();
 
-  const addItem = () => {
-    if (itemName && itemPrice) {
-      setItems([...items, { name: itemName, price: parseFloat(itemPrice) }]);
-      setItemName("");
-      setItemPrice("");
-      toast({
-        title: "Item added.",
-        description: `${itemName} has been added to the cart.`,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: "Error.",
-        description: "Please enter both item name and price.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
+  const addItem = (item) => {
+    setItems([...items, item]);
+    toast({
+      title: "Item added.",
+      description: `${item.name} has been added to the cart.`,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   const removeItem = (index) => {
@@ -56,11 +44,9 @@ const Index = () => {
           </Text>
           <FaShoppingCart size="2em" />
         </HStack>
-        <HStack w="100%" spacing={4}>
-          <Input placeholder="Item Name" value={itemName} onChange={(e) => setItemName(e.target.value)} />
-          <Input placeholder="Item Price" type="number" value={itemPrice} onChange={(e) => setItemPrice(e.target.value)} />
-          <IconButton aria-label="Add Item" icon={<FaPlus />} onClick={addItem} />
-        </HStack>
+        <Button colorScheme="teal" size="lg" w="100%" onClick={() => navigate("/menu")}>
+          Open Items
+        </Button>
         <VStack w="100%" spacing={4} alignItems="flex-start">
           {items.map((item, index) => (
             <HStack key={index} w="100%" justifyContent="space-between" p={2} borderWidth={1} borderRadius="md">
@@ -81,7 +67,7 @@ const Index = () => {
           </Text>
         </HStack>
         <Button colorScheme="teal" size="lg" w="100%">
-          Checkout
+          Payment
         </Button>
       </VStack>
     </Container>
